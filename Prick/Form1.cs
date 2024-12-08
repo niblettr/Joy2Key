@@ -2,6 +2,8 @@ using System.Runtime.InteropServices;
 using System.Diagnostics;
 using SharpDX.XInput;
 using static System.Windows.Forms.AxHost;
+using WindowsInput.Native;
+using WindowsInput;
 
 namespace Prick
 {
@@ -13,9 +15,20 @@ namespace Prick
         [DllImport("USER32.DLL")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        [DllImport("user32.dll", SetLastError = true)]
+        private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
+
+        private const int KEYEVENTF_KEYUP = 0x0002;
+
+        // import the function in your class
+        //[DllImport("User32.dll")]
+        //static extern int SetForegroundWindow(IntPtr point);
+
         int GearPosition;
         bool connected = false;
         Controller MyController;
+        InputSimulator inputSimulator;
+
         public Form1()
         {
             InitializeComponent();
@@ -25,6 +38,79 @@ namespace Prick
             Thread loopThread = new Thread(PollJoystickXinput);
             loopThread.Start();
         }
+
+        public void DebugPrint(string text)
+        {
+            if (richTextBox1.InvokeRequired)
+            {
+                richTextBox1.Invoke(new Action(() => richTextBox1.AppendText(text)));
+            }
+            else
+            {
+                richTextBox1.AppendText(text);
+            }
+        }
+
+        public void DebugPrintLine(string text)
+        {
+            DebugPrint(text + "\n");
+        }
+
+
+        // convert gear to key
+        public void SpoofKeypress(int gear)
+        {
+            //IntPtr Model2Emu = FindWindow(null, "Model 2 Emulator"); // emulator
+            IntPtr Model2Emu = FindWindow(null, "Sega Rally Championship (Rev B)");
+            if (SetForegroundWindow(Model2Emu))
+            {
+                DebugPrintLine("emulator found / running");
+                byte key = 0;
+
+                switch (gear)
+                {
+                    case 1:
+                        key = (byte)Keys.I;
+                        break;
+                    case 2:
+                        key = (byte)Keys.K;
+                        break;
+                    case 3:
+                        key = (byte)Keys.O;
+                        break;
+                    case 4:
+                        key = (byte)Keys.L;
+                        break;
+                }
+
+                Debug.WriteLine(">>>>>>>>>>>>>>>>Send key: '" + ((char)key).ToString() + "'");
+
+
+                //Process p = Process.GetProcessesByName("Sega Rally Championship (Rev B)").FirstOrDefault();
+                //if (p != null)
+                //{
+                //    IntPtr h = p.MainWindowHandle;
+                //    SetForegroundWindow(h);
+                //    SendKeys.SendWait("6");
+                //}
+
+
+
+                //inputSimulator = new InputSimulator();
+                //inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_6);
+
+                //  keybd_event(key, 0, 0, UIntPtr.Zero); // Key down
+                //  keybd_event(key, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
+            }
+            else
+            {
+                DebugPrintLine("emulator NOT found/running");
+            }
+        }
+
+
+
+
 
         public void PollJoystickXinput()
         {
@@ -37,7 +123,7 @@ namespace Prick
                 {
                     if (IsKeyPressed(ConsoleKey.Escape))
                     {
-                        Debug.WriteLine("escape pressed");
+                        DebugPrintLine("escape pressed");
                         return;
                     }
 
@@ -52,14 +138,14 @@ namespace Prick
                     previousState = MyControllerState;
                 }
 
-                Debug.WriteLine("Controller disconnected");
+                DebugPrintLine("Controller disconnected");
                 Thread.Sleep(1000); // Wait before trying to reconnect
             }
         }
         void HandleGamepadDataIn(SharpDX.XInput.State MyControllerState)
         {
-            //Debug.WriteLine($"PacketNumber : {MyControllerState.PacketNumber.ToString()}");
-            //Debug.WriteLine(MyControllerState.Gamepad); // prints everything
+            //DebugPrintLine($"PacketNumber : {MyControllerState.PacketNumber.ToString()}");
+            DebugPrintLine(MyControllerState.Gamepad.ToString());
 
             if (MyControllerState.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
             {
@@ -73,7 +159,7 @@ namespace Prick
 
         void InitXInputs()
         {
-            Debug.WriteLine("Start XGamepadApp");
+            DebugPrintLine("Start XGamepadApp");
 
             // Initialize XInput
             var controllers = new[] { new Controller(UserIndex.One),
@@ -95,14 +181,14 @@ namespace Prick
 
             if (MyController == null)
             {
-                Debug.WriteLine("No XInput controller installed");
+                DebugPrintLine("Input controller not found");
             }
             else
             {
-                Debug.WriteLine("XInput controller found..");
+                DebugPrintLine("XInput controller found..");
             }
 
-            Debug.WriteLine("Poll events from controller..");
+            DebugPrintLine("Poll events from controller..");
         }
 
 
@@ -123,55 +209,18 @@ namespace Prick
                     GearPosition = 1; // clamp
                 }
             }
-            Debug.WriteLine($"Gear position : {GearPosition.ToString()}");
+            DebugPrintLine($"Gear position : {GearPosition.ToString()}");
+
+            SpoofKeypress(GearPosition);
         }
+
+
 
         public static bool IsKeyPressed(ConsoleKey key)
         {
             return false;
             //return Console.KeyAvailable && Console.ReadKey(true).Key == key;
         }
-
-        //public void loop()
-        //{
-        //    Poll events from joystick
-        //    while (MyController.IsConnected)
-        //    {
-        //        var previousState = MyController.GetState();
-
-        //        if (IsKeyPressed(ConsoleKey.Escape))
-        //        {
-        //            Console.WriteLine("escape pressed");
-        //            break;
-        //        }
-
-        //        var state = MyController.GetState();
-
-        //        if (previousState.PacketNumber != state.PacketNumber)
-        //        {
-        //            Console.WriteLine($"PacketNumber : {state.PacketNumber.ToString()}");
-        //            Console.WriteLine(state.Gamepad); // prints everything
-
-        //            Console.WriteLine(state.Gamepad.Buttons);
-
-        //            IntPtr Model2Emu = FindWindow(null, "Model 2 Emulator"); // emulator
-
-        //            if (SetForegroundWindow(Model2Emu))
-        //            {
-        //                Console.WriteLine("emulator found");
-        //                SendKeys.SendWait("10{+}10=");   //<<<<<<<<<<<<<<<<<<<<<<<< CUNT CUNT CUNT CUNT PRICKS.
-        //            }
-        //            else
-        //            {
-        //                Console.WriteLine("emulator NOT found");
-        //            }
-
-        //        }
-
-        //        Thread.Sleep(100);
-        //        previousState = state;
-        //    }
-        //}
     }
 
 }
