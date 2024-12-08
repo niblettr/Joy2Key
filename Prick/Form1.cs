@@ -1,5 +1,7 @@
 using System.Runtime.InteropServices;
+using System.Diagnostics;
 using SharpDX.XInput;
+using static System.Windows.Forms.AxHost;
 
 namespace Prick
 {
@@ -12,13 +14,88 @@ namespace Prick
         public static extern bool SetForegroundWindow(IntPtr hWnd);
 
         int GearPosition;
+        bool connected = false;
+        Controller MyController;
         public Form1()
         {
             InitializeComponent();
-
+            InitXInputs();
             GearPosition = 1;
-            loop();
+
+            Thread loopThread = new Thread(PollJoystickXinput);
+            loopThread.Start();
         }
+
+        public void PollJoystickXinput()
+        {
+            // Poll events from joystick
+            while (MyController.IsConnected)
+            {
+                var previousState = MyController.GetState();
+
+                while (MyController.IsConnected)
+                {
+                    if (IsKeyPressed(ConsoleKey.Escape))
+                    {
+                        Debug.WriteLine("escape pressed");
+                        return;
+                    }
+
+                    var MyControllerState = MyController.GetState();
+
+                    if (previousState.PacketNumber != MyControllerState.PacketNumber)
+                    {
+                        HandleGamepadDataIn(MyControllerState);
+                    }
+
+                    Thread.Sleep(10);
+                    previousState = MyControllerState;
+                }
+
+                Debug.WriteLine("Controller disconnected");
+                Thread.Sleep(1000); // Wait before trying to reconnect
+            }
+        }
+        void HandleGamepadDataIn(SharpDX.XInput.State MyControllerState)
+        {
+            Debug.WriteLine($"PacketNumber : {MyControllerState.PacketNumber.ToString()}");
+            Debug.WriteLine(MyControllerState.Gamepad); // prints everything
+        }
+
+        void InitXInputs()
+        {
+            Debug.WriteLine("Start XGamepadApp");
+
+            // Initialize XInput
+            var controllers = new[] { new Controller(UserIndex.One),
+                                      new Controller(UserIndex.Two),
+                                      new Controller(UserIndex.Three),
+                                      new Controller(UserIndex.Four) };
+
+            // Get 1st controller available
+            MyController = null;
+
+            foreach (var selectControler in controllers)
+            {
+                if (selectControler.IsConnected)
+                {
+                    MyController = selectControler;
+                    break;
+                }
+            }
+
+            if (MyController == null)
+            {
+                Debug.WriteLine("No XInput controller installed");
+            }
+            else
+            {
+                Debug.WriteLine("XInput controller found..");
+            }
+
+            Debug.WriteLine("Poll events from controller..");
+        }
+
 
         public void ChangeGear(bool dir)
         {
@@ -37,83 +114,55 @@ namespace Prick
                     GearPosition = 1; // clamp
                 }
             }
-            Console.WriteLine($"Gear position : {GearPosition.ToString()}");
-        }
-
-        public void loop()
-        {
-            
-            Console.WriteLine("Start XGamepadApp");
-
-            // Initialize XInput
-            var controllers = new[] { new Controller(UserIndex.One), new Controller(UserIndex.Two), new Controller(UserIndex.Three), new Controller(UserIndex.Four) };
-
-            // Get 1st controller available
-            Controller MyController = null;
-
-            foreach (var selectControler in controllers)
-            {
-                if (selectControler.IsConnected)
-                {
-                    MyController = selectControler;
-                    break;
-                }
-            }
-
-            if (MyController == null)
-            {
-                Console.WriteLine("No XInput controller installed");
-            }
-            else
-            {
-                Console.WriteLine("XInput controller found..");
-            }
-
-            Console.WriteLine("Poll events from controller..");
-
-
-            // Poll events from joystick
-            while (MyController.IsConnected)
-            {
-                var previousState = MyController.GetState();
-
-                if (IsKeyPressed(ConsoleKey.Escape))
-                {
-                    Console.WriteLine("escape pressed");
-                    break;
-                }
-                var state = MyController.GetState();
-
-                if (previousState.PacketNumber != state.PacketNumber)
-                {
-                    Console.WriteLine($"PacketNumber : {state.PacketNumber.ToString()}");
-                    Console.WriteLine(state.Gamepad); // prints everything
-
-                    //Console.WriteLine(state.Gamepad.Buttons);
-
-                    //IntPtr Model2Emu = FindWindow(null, "Model 2 Emulator"); // emulator
-
-                    //if (SetForegroundWindow(Model2Emu))
-                    //{
-                    //    Console.WriteLine("emulator found");
-                    //    SendKeys.SendWait("10{+}10=");   //<<<<<<<<<<<<<<<<<<<<<<<< CUNT CUNT CUNT CUNT PRICKS.
-                    //}
-                    //else
-                    //{
-                    //    Console.WriteLine("emulator NOT found");
-                    //}
-
-                }
-
-                Thread.Sleep(10);
-                previousState = state;
-            }
+            Debug.WriteLine($"Gear position : {GearPosition.ToString()}");
         }
 
         public static bool IsKeyPressed(ConsoleKey key)
         {
-            return Console.KeyAvailable && Console.ReadKey(true).Key == key;
+            return false;
+            //return Console.KeyAvailable && Console.ReadKey(true).Key == key;
         }
+
+        //public void loop()
+        //{
+        //    Poll events from joystick
+        //    while (MyController.IsConnected)
+        //    {
+        //        var previousState = MyController.GetState();
+
+        //        if (IsKeyPressed(ConsoleKey.Escape))
+        //        {
+        //            Console.WriteLine("escape pressed");
+        //            break;
+        //        }
+
+        //        var state = MyController.GetState();
+
+        //        if (previousState.PacketNumber != state.PacketNumber)
+        //        {
+        //            Console.WriteLine($"PacketNumber : {state.PacketNumber.ToString()}");
+        //            Console.WriteLine(state.Gamepad); // prints everything
+
+        //            Console.WriteLine(state.Gamepad.Buttons);
+
+        //            IntPtr Model2Emu = FindWindow(null, "Model 2 Emulator"); // emulator
+
+        //            if (SetForegroundWindow(Model2Emu))
+        //            {
+        //                Console.WriteLine("emulator found");
+        //                SendKeys.SendWait("10{+}10=");   //<<<<<<<<<<<<<<<<<<<<<<<< CUNT CUNT CUNT CUNT PRICKS.
+        //            }
+        //            else
+        //            {
+        //                Console.WriteLine("emulator NOT found");
+        //            }
+
+        //        }
+
+        //        Thread.Sleep(100);
+        //        previousState = state;
+        //    }
+        //}
     }
 
 }
