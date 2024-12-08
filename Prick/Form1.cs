@@ -58,8 +58,17 @@ namespace Prick
         }
         void HandleGamepadDataIn(SharpDX.XInput.State MyControllerState)
         {
-            Debug.WriteLine($"PacketNumber : {MyControllerState.PacketNumber.ToString()}");
-            Debug.WriteLine(MyControllerState.Gamepad); // prints everything
+            //Debug.WriteLine($"PacketNumber : {MyControllerState.PacketNumber.ToString()}");
+            //Debug.WriteLine(MyControllerState.Gamepad); // prints everything
+
+            if (MyControllerState.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
+            {
+                ChangeGear(true);
+            }
+            else if (MyControllerState.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder))
+            {
+                ChangeGear(false);
+            }
         }
 
         void InitXInputs()
@@ -101,7 +110,7 @@ namespace Prick
         {
             if (dir) // up
             {
-                if (GearPosition++ > 4)
+                if (++GearPosition > 4)
                 {
                     GearPosition = 4; // clamp
                 }
@@ -109,7 +118,7 @@ namespace Prick
             }
             else // down
             {
-                if (GearPosition-- < 1)
+                if (--GearPosition < 1)
                 {
                     GearPosition = 1; // clamp
                 }
