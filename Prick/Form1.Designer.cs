@@ -51,7 +51,7 @@
             AppName_textBox.Name = "AppName_textBox";
             AppName_textBox.Size = new Size(184, 23);
             AppName_textBox.TabIndex = 1;
-            AppName_textBox.Text = "Notepad";
+            AppName_textBox.Text = "Sega Rally Championship (Rev B)";
             // 
             // label1
             // 
@@ -70,7 +70,7 @@
             button1.TabIndex = 3;
             button1.Text = "Clear";
             button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
+            button1.Click += ClearButton_Click;
             // 
             // button2
             // 

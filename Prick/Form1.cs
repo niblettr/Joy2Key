@@ -35,12 +35,19 @@ namespace Prick
             Thread loopThread = new Thread(PollJoystickXinput);
             loopThread.Start();// start the PollJoystickXinput thread
         }
-        public void SpoofKeypress(int gear)
+
+        public enum GearDirection
+        {
+            Up,
+            Down
+        }
+
+        public void HandleGearChange(int gear)
         {
             String AppName = AppName_textBox.Text;
-            IntPtr p = FindWindow(null, AppName);
+            //IntPtr p = FindWindow(null, AppName);
 
-            if (p != null && SetForegroundWindow(p))
+            //if (p != null && SetForegroundWindow(p))
             {
                 DebugPrintLine("\"" + AppName + "\" found/running");
                 string key = string.Empty;
@@ -62,24 +69,20 @@ namespace Prick
                 }
 
                 DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + key + "'");
-#if false
-                SendKeys.SendWait(key); //what a pile to steaming shite!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-#else
 
-                //inputSimulator = new InputSimulator();
-                //inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_6);
+                inputSimulator = new InputSimulator();
+                inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_6);
 
 
-                byte newkey = (byte)key[0];
+                //byte newkey = (byte)key[0];
 
-                keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
-                keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
-#endif
+                //keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
+                //keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
             }
-            else
-            {
-                DebugPrintLine("ERROR: \"" + AppName + "\" NOT found/running");
-            }
+            //else
+            //{
+            //    DebugPrintLine("ERROR: \"" + AppName + "\" NOT found/running");
+            //}
         }
 
 
@@ -90,34 +93,28 @@ namespace Prick
         {
             if(MyController != null)
             {
-            // Poll events from joystick
-            while (MyController.IsConnected)
-            {
-                var previousState = MyController.GetState();
-
+                // Poll events from joystick
                 while (MyController.IsConnected)
                 {
-                    if (IsKeyPressed(ConsoleKey.Escape))
+                    var previousState = MyController.GetState();
+                
+                    while (MyController.IsConnected)
                     {
-                        DebugPrintLine("escape pressed");
-                        return;
+                        var MyControllerState = MyController.GetState();
+                
+                        if (previousState.PacketNumber != MyControllerState.PacketNumber)
+                        {
+                            HandleGamepadDataIn(MyControllerState);
+                        }
+                
+                        Thread.Sleep(1);
+                        previousState = MyControllerState;
                     }
-
-                    var MyControllerState = MyController.GetState();
-
-                    if (previousState.PacketNumber != MyControllerState.PacketNumber)
-                    {
-                        HandleGamepadDataIn(MyControllerState);
-                    }
-
-                    Thread.Sleep(10);
-                    previousState = MyControllerState;
+                
+                    DebugPrintLine("Controller disconnected");
+                    Thread.Sleep(1000); // Wait before trying to reconnect
                 }
-
-                DebugPrintLine("Controller disconnected");
-                Thread.Sleep(1000); // Wait before trying to reconnect
             }
-        }
         }
         void HandleGamepadDataIn(SharpDX.XInput.State MyControllerState)
         {
@@ -129,11 +126,11 @@ namespace Prick
 
             if (MyControllerState.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
             {
-                ChangeGear(true);
+                SetGear(GearDirection.Up);
             }
             else if (MyControllerState.Gamepad.Buttons.HasFlag(GamepadButtonFlags.LeftShoulder))
             {
-                ChangeGear(false);
+                SetGear(GearDirection.Down);
             }
         }
 
@@ -171,10 +168,9 @@ namespace Prick
             DebugPrintLine("Poll events from controller..");
         }
 
-
-        public void ChangeGear(bool dir)
+        public void SetGear(GearDirection direction)
         {
-            if (dir) // up
+            if (direction == GearDirection.Up)
             {
                 if (++GearPosition > 4)
                 {
@@ -182,7 +178,7 @@ namespace Prick
                 }
 
             }
-            else // down
+            else if (direction == GearDirection.Down)
             {
                 if (--GearPosition < 1)
                 {
@@ -191,24 +187,21 @@ namespace Prick
             }
             DebugPrintLine($"Gear position : {GearPosition.ToString()}");
 
-            SpoofKeypress(GearPosition);
+            HandleGearChange(GearPosition);
         }
-
-
-
-        public static bool IsKeyPressed(ConsoleKey key)
-        {
-            return false;
-            //return Console.KeyAvailable && Console.ReadKey(true).Key == key;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
+        private void ClearButton_Click(object sender, EventArgs e)
         {
             richTextBox1.Clear();
         }
 
         private void FindApp_button_Click(object sender, EventArgs e)
         {
+            FindApp();
+        }
+
+        public bool FindApp()
+        {
+            bool found = false;
             String AppName = AppName_textBox.Text;
 #if false
             Process p = Process.GetProcessesByName(AppName).FirstOrDefault(); // Sega Rally Championship (Rev B) // Model 2 Emulator  // Calculator
@@ -220,12 +213,14 @@ namespace Prick
             if (SetForegroundWindow(p)) // working: calculator Model 2 Emulator 
 #endif
             {
+                found = true;
                 DebugPrintLine(AppName + " found");
             }
             else
             {
                 DebugPrintLine("ERROR: " + AppName + " not found");
             }
+            return found;
         }
 
         public void DebugPrint(string text)
