@@ -4,6 +4,7 @@ using SharpDX.XInput;
 using static System.Windows.Forms.AxHost;
 using WindowsInput.Native;
 using WindowsInput;
+using System.Windows.Forms;
 
 namespace Prick
 {
@@ -19,10 +20,6 @@ namespace Prick
         private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
         private const int KEYEVENTF_KEYUP = 0x0002;
-
-        // import the function in your class
-        //[DllImport("User32.dll")]
-        //static extern int SetForegroundWindow(IntPtr point);
 
         int GearPosition;
         bool connected = false;
@@ -44,10 +41,12 @@ namespace Prick
             if (richTextBox1.InvokeRequired)
             {
                 richTextBox1.Invoke(new Action(() => richTextBox1.AppendText(text)));
+                richTextBox1.Invoke(new Action(() => richTextBox1.ScrollToCaret()));
             }
             else
             {
                 richTextBox1.AppendText(text);
+                richTextBox1.ScrollToCaret();
             }
         }
 
@@ -60,30 +59,39 @@ namespace Prick
         // convert gear to key
         public void SpoofKeypress(int gear)
         {
-            //IntPtr Model2Emu = FindWindow(null, "Model 2 Emulator"); // emulator
-            IntPtr Model2Emu = FindWindow(null, "Sega Rally Championship (Rev B)");
-            if (SetForegroundWindow(Model2Emu))
+            String AppName = AppName_textBox.Text;
+
+            IntPtr AppPtr = FindWindow(null, AppName); // Sega Rally Championship (Rev B) // Model 2 Emulator
+
+            Process p = Process.GetProcessesByName("notepad").FirstOrDefault();
+
+            if (p != null)
             {
-                DebugPrintLine("emulator found / running");
-                byte key = 0;
+                IntPtr h = p.MainWindowHandle;
+                SetForegroundWindow(h);
+
+                DebugPrintLine("\"" + AppName + "\" found/running");
+                string key = string.Empty;
 
                 switch (gear)
                 {
                     case 1:
-                        key = (byte)Keys.I;
+                        key = "I";
                         break;
                     case 2:
-                        key = (byte)Keys.K;
+                        key = "K";
                         break;
                     case 3:
-                        key = (byte)Keys.O;
+                        key = "O";
                         break;
                     case 4:
-                        key = (byte)Keys.L;
+                        key = "L";
                         break;
                 }
 
-                Debug.WriteLine(">>>>>>>>>>>>>>>>Send key: '" + ((char)key).ToString() + "'");
+                DebugPrintLine(">>>>>>>>>>>>>>>>Send key: '" + key + "'");
+
+                SendKeys.SendWait(key);
 
 
                 //Process p = Process.GetProcessesByName("Sega Rally Championship (Rev B)").FirstOrDefault();
@@ -104,7 +112,7 @@ namespace Prick
             }
             else
             {
-                DebugPrintLine("emulator NOT found/running");
+                DebugPrintLine("ERROR: \"" + AppName + "\" NOT found/running");
             }
         }
 
@@ -220,6 +228,11 @@ namespace Prick
         {
             return false;
             //return Console.KeyAvailable && Console.ReadKey(true).Key == key;
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            richTextBox1.Clear();
         }
     }
 
