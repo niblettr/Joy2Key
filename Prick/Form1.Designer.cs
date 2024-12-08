@@ -32,6 +32,8 @@
             AppName_textBox = new TextBox();
             label1 = new Label();
             button1 = new Button();
+            button2 = new Button();
+            checkBox1 = new CheckBox();
             SuspendLayout();
             // 
             // richTextBox1
@@ -47,7 +49,7 @@
             // 
             AppName_textBox.Location = new Point(104, 17);
             AppName_textBox.Name = "AppName_textBox";
-            AppName_textBox.Size = new Size(108, 23);
+            AppName_textBox.Size = new Size(184, 23);
             AppName_textBox.TabIndex = 1;
             AppName_textBox.Text = "Notepad";
             // 
@@ -70,11 +72,35 @@
             button1.UseVisualStyleBackColor = true;
             button1.Click += button1_Click;
             // 
+            // button2
+            // 
+            button2.Location = new Point(294, 16);
+            button2.Name = "button2";
+            button2.Size = new Size(88, 24);
+            button2.TabIndex = 4;
+            button2.Text = "find";
+            button2.UseVisualStyleBackColor = true;
+            button2.Click += FindApp_button_Click;
+            // 
+            // checkBox1
+            // 
+            checkBox1.AutoSize = true;
+            checkBox1.Checked = true;
+            checkBox1.CheckState = CheckState.Checked;
+            checkBox1.Location = new Point(12, 46);
+            checkBox1.Name = "checkBox1";
+            checkBox1.Size = new Size(108, 19);
+            checkBox1.TabIndex = 5;
+            checkBox1.Text = "Show all Xinput";
+            checkBox1.UseVisualStyleBackColor = true;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1266, 477);
+            Controls.Add(checkBox1);
+            Controls.Add(button2);
             Controls.Add(button1);
             Controls.Add(label1);
             Controls.Add(AppName_textBox);
@@ -91,5 +117,7 @@
         private TextBox AppName_textBox;
         private Label label1;
         private Button button1;
+        private Button button2;
+        private CheckBox checkBox1;
     }
 }

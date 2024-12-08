@@ -5,6 +5,8 @@ using static System.Windows.Forms.AxHost;
 using WindowsInput.Native;
 using WindowsInput;
 using System.Windows.Forms;
+using System.Reflection;
+using System.Security.Cryptography;
 
 namespace Prick
 {
@@ -22,7 +24,6 @@ namespace Prick
         private const int KEYEVENTF_KEYUP = 0x0002;
 
         int GearPosition;
-        bool connected = false;
         Controller MyController;
         InputSimulator inputSimulator;
 
@@ -30,46 +31,17 @@ namespace Prick
         {
             InitializeComponent();
             InitXInputs();
-            GearPosition = 1;
-
+            GearPosition = 1; // start in 1st gear
             Thread loopThread = new Thread(PollJoystickXinput);
-            loopThread.Start();
+            loopThread.Start();// start the PollJoystickXinput thread
         }
-
-        public void DebugPrint(string text)
-        {
-            if (richTextBox1.InvokeRequired)
-            {
-                richTextBox1.Invoke(new Action(() => richTextBox1.AppendText(text)));
-                richTextBox1.Invoke(new Action(() => richTextBox1.ScrollToCaret()));
-            }
-            else
-            {
-                richTextBox1.AppendText(text);
-                richTextBox1.ScrollToCaret();
-            }
-        }
-
-        public void DebugPrintLine(string text)
-        {
-            DebugPrint(text + "\n");
-        }
-
-
-        // convert gear to key
         public void SpoofKeypress(int gear)
         {
             String AppName = AppName_textBox.Text;
+            IntPtr p = FindWindow(null, AppName);
 
-            IntPtr AppPtr = FindWindow(null, AppName); // Sega Rally Championship (Rev B) // Model 2 Emulator
-
-            Process p = Process.GetProcessesByName("notepad").FirstOrDefault();
-
-            if (p != null)
+            if (p != null && SetForegroundWindow(p))
             {
-                IntPtr h = p.MainWindowHandle;
-                SetForegroundWindow(h);
-
                 DebugPrintLine("\"" + AppName + "\" found/running");
                 string key = string.Empty;
 
@@ -89,26 +61,20 @@ namespace Prick
                         break;
                 }
 
-                DebugPrintLine(">>>>>>>>>>>>>>>>Send key: '" + key + "'");
-
-                SendKeys.SendWait(key);
-
-
-                //Process p = Process.GetProcessesByName("Sega Rally Championship (Rev B)").FirstOrDefault();
-                //if (p != null)
-                //{
-                //    IntPtr h = p.MainWindowHandle;
-                //    SetForegroundWindow(h);
-                //    SendKeys.SendWait("6");
-                //}
-
-
+                DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + key + "'");
+#if false
+                SendKeys.SendWait(key); //what a pile to steaming shite!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#else
 
                 //inputSimulator = new InputSimulator();
                 //inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_6);
 
-                //  keybd_event(key, 0, 0, UIntPtr.Zero); // Key down
-                //  keybd_event(key, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
+
+                byte newkey = (byte)key[0];
+
+                keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
+                keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
+#endif
             }
             else
             {
@@ -122,6 +88,8 @@ namespace Prick
 
         public void PollJoystickXinput()
         {
+            if(MyController != null)
+            {
             // Poll events from joystick
             while (MyController.IsConnected)
             {
@@ -150,10 +118,14 @@ namespace Prick
                 Thread.Sleep(1000); // Wait before trying to reconnect
             }
         }
+        }
         void HandleGamepadDataIn(SharpDX.XInput.State MyControllerState)
         {
             //DebugPrintLine($"PacketNumber : {MyControllerState.PacketNumber.ToString()}");
-            DebugPrintLine(MyControllerState.Gamepad.ToString());
+            if (checkBox1.Checked)
+            {
+                DebugPrintLine(MyControllerState.Gamepad.ToString());
+            }            
 
             if (MyControllerState.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
             {
@@ -234,6 +206,45 @@ namespace Prick
         {
             richTextBox1.Clear();
         }
-    }
 
+        private void FindApp_button_Click(object sender, EventArgs e)
+        {
+            String AppName = AppName_textBox.Text;
+#if false
+            Process p = Process.GetProcessesByName(AppName).FirstOrDefault(); // Sega Rally Championship (Rev B) // Model 2 Emulator  // Calculator
+
+            if (p != null)
+#else
+            IntPtr p = FindWindow(null, AppName); // Sega Rally Championship (Rev B) // Model 2 Emulator  // Calculator
+
+            if (SetForegroundWindow(p)) // working: calculator Model 2 Emulator 
+#endif
+            {
+                DebugPrintLine(AppName + " found");
+            }
+            else
+            {
+                DebugPrintLine("ERROR: " + AppName + " not found");
+            }
+        }
+
+        public void DebugPrint(string text)
+        {
+            if (richTextBox1.InvokeRequired)
+            {
+                richTextBox1.Invoke(new Action(() => richTextBox1.AppendText(text)));
+                richTextBox1.Invoke(new Action(() => richTextBox1.ScrollToCaret()));
+            }
+            else
+            {
+                richTextBox1.AppendText(text);
+                richTextBox1.ScrollToCaret();
+            }
+        }
+
+        public void DebugPrintLine(string text)
+        {
+            DebugPrint(text + "\n");
+        }
+    }
 }
