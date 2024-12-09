@@ -34,6 +34,9 @@
             button1 = new Button();
             button2 = new Button();
             checkBox1 = new CheckBox();
+            GearDown_button = new Button();
+            GearUp_button = new Button();
+            Coin_button = new Button();
             SuspendLayout();
             // 
             // richTextBox1
@@ -94,11 +97,44 @@
             checkBox1.Text = "Show all Xinput";
             checkBox1.UseVisualStyleBackColor = true;
             // 
+            // GearDown_button
+            // 
+            GearDown_button.Location = new Point(146, 84);
+            GearDown_button.Name = "GearDown_button";
+            GearDown_button.Size = new Size(88, 32);
+            GearDown_button.TabIndex = 6;
+            GearDown_button.Text = "Shift Down";
+            GearDown_button.UseVisualStyleBackColor = true;
+            GearDown_button.MouseClick += GearDown_button_Click;
+            // 
+            // GearUp_button
+            // 
+            GearUp_button.Location = new Point(240, 84);
+            GearUp_button.Name = "GearUp_button";
+            GearUp_button.Size = new Size(88, 32);
+            GearUp_button.TabIndex = 7;
+            GearUp_button.Text = "Shift Up";
+            GearUp_button.UseVisualStyleBackColor = true;
+            GearUp_button.MouseClick += GearUp_button_click;
+            // 
+            // Coin_button
+            // 
+            Coin_button.Location = new Point(194, 122);
+            Coin_button.Name = "Coin_button";
+            Coin_button.Size = new Size(88, 32);
+            Coin_button.TabIndex = 8;
+            Coin_button.Text = "Coin";
+            Coin_button.UseVisualStyleBackColor = true;
+            Coin_button.MouseClick += Coin_button_click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1266, 477);
+            Controls.Add(Coin_button);
+            Controls.Add(GearUp_button);
+            Controls.Add(GearDown_button);
             Controls.Add(checkBox1);
             Controls.Add(button2);
             Controls.Add(button1);
@@ -119,5 +155,8 @@
         private Button button1;
         private Button button2;
         private CheckBox checkBox1;
+        private Button GearDown_button;
+        private Button GearUp_button;
+        private Button Coin_button;
     }
 }

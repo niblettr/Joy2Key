@@ -27,6 +27,21 @@ namespace Prick
         Controller MyController;
         InputSimulator inputSimulator;
 
+        public enum GearDirection
+        {
+            Up,
+            Down
+        }
+
+        private static readonly Dictionary<string, VirtualKeyCode> GearToKeyCodeMap = new Dictionary<string, VirtualKeyCode>
+        {
+            { "I", VirtualKeyCode.VK_I },
+            { "K", VirtualKeyCode.VK_K },
+            { "O", VirtualKeyCode.VK_O },
+            { "L", VirtualKeyCode.VK_L },
+            { "6", VirtualKeyCode.VK_6 }
+        };
+
         public Form1()
         {
             InitializeComponent();
@@ -36,93 +51,76 @@ namespace Prick
             loopThread.Start();// start the PollJoystickXinput thread
         }
 
-        public enum GearDirection
+        public void SendKeystroke(string key) // e.g. I K O L 
         {
-            Up,
-            Down
-        }
+            int key_id = 0;
 
-        public void HandleGearChange(int gear)
-        {
             String AppName = AppName_textBox.Text;
-            //IntPtr p = FindWindow(null, AppName);
+            IntPtr p = FindWindow(null, AppName);
 
-            //if (p != null && SetForegroundWindow(p))
+            if (p != null && SetForegroundWindow(p))
             {
                 DebugPrintLine("\"" + AppName + "\" found/running");
-                string key = string.Empty;
-
-                switch (gear)
-                {
-                    case 1:
-                        key = "I";
-                        break;
-                    case 2:
-                        key = "K";
-                        break;
-                    case 3:
-                        key = "O";
-                        break;
-                    case 4:
-                        key = "L";
-                        break;
-                }
-
-                DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + key + "'");
-
-                inputSimulator = new InputSimulator();
-                inputSimulator.Keyboard.KeyDown(VirtualKeyCode.VK_6);
-
-
-                //byte newkey = (byte)key[0];
-
-                //keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
-                //keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
             }
-            //else
-            //{
-            //    DebugPrintLine("ERROR: \"" + AppName + "\" NOT found/running");
-            //}
+            else
+            {
+                DebugPrintLine("ERROR: \"" + AppName + "\" NOT found/running");
+            }
+
+            if (GearToKeyCodeMap.TryGetValue(key, out VirtualKeyCode keyCode))
+            {
+                DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + key + "'");
+            }
+            else
+            {
+                DebugPrintLine("VirtualKeyCode not, complete the table you lazy git");
+            }
+
+            //byte newkey = (byte)key[0];
+            //keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
+            //keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
+
+            DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + key + "'");
+
+            inputSimulator = new InputSimulator();
+            inputSimulator.Keyboard.KeyDown(keyCode); // (VirtualKeyCode.VK_6);
         }
-
-
-
-
 
         public void PollJoystickXinput()
         {
-            if(MyController != null)
+            if (MyController != null)
             {
                 // Poll events from joystick
                 while (MyController.IsConnected)
                 {
                     var previousState = MyController.GetState();
-                
+
                     while (MyController.IsConnected)
                     {
                         var MyControllerState = MyController.GetState();
-                
+
                         if (previousState.PacketNumber != MyControllerState.PacketNumber)
                         {
                             HandleGamepadDataIn(MyControllerState);
                         }
-                
+
                         Thread.Sleep(1);
                         previousState = MyControllerState;
                     }
-                
+
                     DebugPrintLine("Controller disconnected");
                     Thread.Sleep(1000); // Wait before trying to reconnect
                 }
             }
         }
+
         void HandleGamepadDataIn(SharpDX.XInput.State MyControllerState)
         {
             //DebugPrintLine($"PacketNumber : {MyControllerState.PacketNumber.ToString()}");
             if (checkBox1.Checked)
             {
                 DebugPrintLine(MyControllerState.Gamepad.ToString());
-            }            
+            }
 
             if (MyControllerState.Gamepad.Buttons.HasFlag(GamepadButtonFlags.RightShoulder))
             {
@@ -187,7 +185,25 @@ namespace Prick
             }
             DebugPrintLine($"Gear position : {GearPosition.ToString()}");
 
-            HandleGearChange(GearPosition);
+            string key = string.Empty;
+
+            switch (GearPosition)
+            {
+                case 1:
+                    key = "I";
+                    break;
+                case 2:
+                    key = "K";
+                    break;
+                case 3:
+                    key = "O";
+                    break;
+                case 4:
+                    key = "L";
+                    break;
+            }
+
+            SendKeystroke(key);
         }
         private void ClearButton_Click(object sender, EventArgs e)
         {
@@ -241,5 +257,28 @@ namespace Prick
         {
             DebugPrint(text + "\n");
         }
+
+        private void Coin_button_click(object sender, MouseEventArgs e)
+        {
+            SendKeystroke("6");
+        }
+
+        private void GearUp_button_click(object sender, MouseEventArgs e)
+        {
+            SetGear(GearDirection.Up);
+        }
+
+        private void GearDown_button_Click(object sender, MouseEventArgs e)
+        {
+            SetGear(GearDirection.Down);
+        }
     }
 }
+
+
+
+
+
+
+
+
