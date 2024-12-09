@@ -16,5 +16,8 @@
     <Compile Update="JoyPad.cs">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Update="KeystrokeEmu.cs">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
 </Project>
