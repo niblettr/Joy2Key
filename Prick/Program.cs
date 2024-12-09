@@ -1,4 +1,4 @@
-namespace Prick
+namespace ControllerKeystroke
 {
     internal static class Program
     {

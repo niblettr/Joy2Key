@@ -1,4 +1,4 @@
-﻿namespace Prick
+﻿namespace ControllerKeystroke
 {
     partial class Form1
     {

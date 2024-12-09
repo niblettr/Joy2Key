@@ -8,7 +8,7 @@ using System.Windows.Forms;
 using System.Reflection;
 using System.Security.Cryptography;
 
-namespace Prick
+namespace ControllerKeystroke
 {
     public partial class Form1 : Form
     {
@@ -53,8 +53,6 @@ namespace Prick
 
         public void SendKeystroke(string key) // e.g. I K O L 
         {
-            int key_id = 0;
-
             String AppName = AppName_textBox.Text;
             IntPtr p = FindWindow(null, AppName);
 
@@ -70,20 +68,19 @@ namespace Prick
             if (GearToKeyCodeMap.TryGetValue(key, out VirtualKeyCode keyCode))
             {
                 DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + key + "'");
+
+                //works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                inputSimulator = new InputSimulator();
+                inputSimulator.Keyboard.KeyDown(keyCode);
+
+                //byte newkey = (byte)key[0];
+                //keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
+                //keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
             }
             else
             {
                 DebugPrintLine("VirtualKeyCode not, complete the table you lazy git");
             }
-
-            //byte newkey = (byte)key[0];
-            //keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
-            //keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
-
-            DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + key + "'");
-
-            inputSimulator = new InputSimulator();
-            inputSimulator.Keyboard.KeyDown(keyCode); // (VirtualKeyCode.VK_6);
         }
 
         public void PollJoystickXinput()
