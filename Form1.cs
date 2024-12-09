@@ -34,14 +34,7 @@ namespace Joy2Key
         Controller MyController;
         InputSimulator inputSimulator;
 
-        /// <summary>
-        /// Represents the direction of the gear shift.
-        /// </summary>
-        public enum GearDirection
-        {
-            Up,
-            Down
-        }
+
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Form1"/> class.
@@ -53,50 +46,6 @@ namespace Joy2Key
             GearPosition = 1; // start in 1st gear
             Thread loopThread = new Thread(PollJoystickXinput);
             loopThread.Start(); // start the PollJoystickXinput thread
-        }
-
-        /// <summary>
-        /// Sets the gear position based on the direction.
-        /// </summary>
-        /// <param name="direction">The direction to shift the gear.</param>
-        public void SetGear(GearDirection direction)
-        {
-            if (direction == GearDirection.Up)
-            {
-                if (++GearPosition > 4)
-                {
-                    GearPosition = 4; // clamp
-                }
-
-            }
-            else if (direction == GearDirection.Down)
-            {
-                if (--GearPosition < 1)
-                {
-                    GearPosition = 1; // clamp
-                }
-            }
-            DebugPrintLine($"Gear position : {GearPosition.ToString()}");
-
-            string key = string.Empty;
-
-            switch (GearPosition)
-            {
-                case 1:
-                    key = "I";
-                    break;
-                case 2:
-                    key = "K";
-                    break;
-                case 3:
-                    key = "O";
-                    break;
-                case 4:
-                    key = "L";
-                    break;
-            }
-
-            SendKeystroke(key);
         }
     }
 }
