@@ -47,5 +47,19 @@ namespace Joy2Key
             Thread loopThread = new Thread(PollJoystickXinput);
             loopThread.Start(); // start the PollJoystickXinput thread
         }
+
+        public int GetKeyHoldTime()
+        {
+            int delay;
+            if (int.TryParse(KeyHoldTime_TextBox.Text, out delay))
+            {
+                return delay;
+            }
+            else
+            {
+                DebugPrintLine("ERROR: invalid delay value, using default:100");
+                return 100; // default
+            }
+        }
     }
 }

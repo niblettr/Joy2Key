@@ -180,19 +180,5 @@ namespace Joy2Key
         {
             KeySimulator.SendKeyPress(KeySimulator.VK_6, this); // just send a 6 for now (coin insert)
         }
-
-        public int GetKeyHoldTime()
-        {
-            int delay;
-            if (int.TryParse(KeyHoldTime_TextBox.Text, out delay))
-            {
-                return delay;
-            }
-            else
-            {
-                DebugPrintLine("ERROR: invalid delay value, using default:100");
-                return 100; // default
-            }
-        }
     }
 }
