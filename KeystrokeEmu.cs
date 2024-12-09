@@ -41,7 +41,7 @@ namespace Joy2Key
 
             public const int VK_SPACE = 0x20;
             public const int VK_ENTER = 0x0D;
-            public const int VK_6 = 0x36;  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            public const int VK_6     = 0x36;  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
             // Import the SendInput function from user32.dll
             [DllImport("user32.dll", SetLastError = true)]
