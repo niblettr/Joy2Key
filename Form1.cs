@@ -7,6 +7,7 @@ using WindowsInput;
 using System.Windows.Forms;
 using System.Reflection;
 using System.Security.Cryptography;
+using System.Threading;
 
 namespace ControllerKeystroke
 {
@@ -63,6 +64,96 @@ namespace ControllerKeystroke
             { "6", VirtualKeyCode.VK_6 }
         };
 
+        public class KeySimulator
+        {
+            // Key constants (you can add more as needed)
+
+            public const int VK_SPACE = 0x20;
+            public const int VK_ENTER = 0x0D;
+            public const int VK_6 = 0x36;  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+
+            // Import the SendInput function from user32.dll
+            [DllImport("user32.dll", SetLastError = true)]
+            public static extern uint SendInput(uint nInputs, [In] INPUT[] pInputs, int cbSize);
+
+            // Input structure for SendInput
+            [StructLayout(LayoutKind.Sequential)]
+            public struct INPUT
+            {
+                public uint type;
+                public INPUTUNION inputUnion;
+            }
+
+            [StructLayout(LayoutKind.Explicit)]
+
+            public struct INPUTUNION
+            {
+                [FieldOffset(0)] public MOUSEINPUT mi;
+                [FieldOffset(0)] public KEYBDINPUT ki;
+                [FieldOffset(0)] public HARDWAREINPUT hi;
+            }
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct MOUSEINPUT
+            {
+                public int dx;
+                public int dy;
+                public uint mouseData;
+                public uint dwFlags;
+                public uint time;
+                public UIntPtr dwExtraInfo;
+            }
+
+            [StructLayout(LayoutKind.Sequential)]
+            public struct HARDWAREINPUT
+            {
+                public uint uMsg;
+                public ushort wParamL;
+                public ushort wParamH;
+            }
+
+            // Structure for keyboard input
+            [StructLayout(LayoutKind.Sequential)]
+            public struct KEYBDINPUT
+            {
+                public ushort wVk;
+                public ushort wScan;
+                public uint dwFlags;
+                public uint time;
+                public UIntPtr dwExtraInfo;
+            }
+
+            // Constants for keypress
+            public const uint KEYEVENTF_KEYDOWN = 0x0000;
+            public const uint KEYEVENTF_KEYUP = 0x0002;
+
+            // Virtual keycodes
+            public const uint INPUT_KEYBOARD = 1;
+
+            // Simulate Key Press (Key Down and Key Up)
+            public static void SendKeyPress(ushort key)
+            {
+                INPUT[] inputDown = new INPUT[1];
+                inputDown[0].type = INPUT_KEYBOARD;
+                inputDown[0].inputUnion.ki.wVk = key;
+                inputDown[0].inputUnion.ki.dwFlags = KEYEVENTF_KEYDOWN;
+
+                INPUT[] inputUp = new INPUT[1];
+                inputUp[0].type = INPUT_KEYBOARD;
+                inputUp[0].inputUnion.ki.wVk = key;
+                inputUp[0].inputUnion.ki.dwFlags = KEYEVENTF_KEYUP;
+
+                // Send the key press (Key Down)
+                SendInput(1, inputDown, Marshal.SizeOf(typeof(INPUT)));
+
+                // Optionally, wait for a moment to simulate a longer key press
+                Thread.Sleep(33);  // Adjust the sleep time as needed
+
+                // Send the key release (Key Up)
+                SendInput(1, inputUp, Marshal.SizeOf(typeof(INPUT)));
+            }
+        }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="Form1"/> class.
         /// </summary>
@@ -97,7 +188,7 @@ namespace ControllerKeystroke
             {
                 //Keys keyData = (Keys)keyCode;
 
-                kDebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + KeyStroke + "'");
+                DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + KeyStroke + "'");
 
                 // the troublesome section.....
                 // why are ascci charaters being sent? Should they not be keyboard scan code?
@@ -107,9 +198,11 @@ namespace ControllerKeystroke
                 inputSimulator.Keyboard.KeyDown(keyCode);
 #else
                 // works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                byte newkey = (byte)KeyStroke[0];
-                keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
-                keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
+                //byte newkey = (byte)KeyStroke[0];
+                //keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
+                //keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
+
+                KeySimulator.SendKeyPress(KeySimulator.VK_6);
 #endif
             }
             else
@@ -355,6 +448,32 @@ namespace ControllerKeystroke
         private void GearDown_button_Click(object sender, MouseEventArgs e)
         {
             SetGear(GearDirection.Down);
+        }
+
+        static int counter = 0;
+        private void Switch_Button_Click(object sender, MouseEventArgs e)
+        {
+            counter++;
+            if (counter > 3)
+            {
+                counter = 0;
+            }
+
+            switch (counter)
+            {
+                case 0:
+                    AppName_textBox.Text = "Sega Rally Championship (Rev B)";
+                    break;
+                case 1:
+                    AppName_textBox.Text = "Calculator";
+                    break;
+                case 2:
+                    AppName_textBox.Text = "Model 2 Emulator";
+                    break;
+                case 3:
+                    AppName_textBox.Text = "Notepad";
+                    break;
+            }
         }
     }
 }

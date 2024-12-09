@@ -37,6 +37,7 @@
             GearDown_button = new Button();
             GearUp_button = new Button();
             Coin_button = new Button();
+            button3 = new Button();
             SuspendLayout();
             // 
             // richTextBox1
@@ -127,11 +128,22 @@
             Coin_button.UseVisualStyleBackColor = true;
             Coin_button.MouseClick += Coin_button_click;
             // 
+            // button3
+            // 
+            button3.Location = new Point(388, 17);
+            button3.Name = "button3";
+            button3.Size = new Size(88, 24);
+            button3.TabIndex = 9;
+            button3.Text = "Switch";
+            button3.UseVisualStyleBackColor = true;
+            button3.MouseClick += Switch_Button_Click;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(1266, 477);
+            Controls.Add(button3);
             Controls.Add(Coin_button);
             Controls.Add(GearUp_button);
             Controls.Add(GearDown_button);
@@ -158,5 +170,6 @@
         private Button GearDown_button;
         private Button GearUp_button;
         private Button Coin_button;
+        private Button button3;
     }
 }
