@@ -128,22 +128,6 @@ namespace Joy2Key
             }
         }
 
-        public int GetKeyHoldTime()
-        {
-            int delay;
-            if (int.TryParse(KeyHoldTime_TextBox.Text, out delay))
-            {
-                return delay;
-            }
-            else
-            {
-                DebugPrintLine("ERROR: invalid delay value, using default:100");
-                return 100; // default
-            }            
-        }
-
-        
-
         /// <summary>
         /// Sends a keystroke to the active window.
         /// </summary>
@@ -195,6 +179,20 @@ namespace Joy2Key
         public void SendKey_SendInputMethod()
         {
             KeySimulator.SendKeyPress(KeySimulator.VK_6, this); // just send a 6 for now (coin insert)
+        }
+
+        public int GetKeyHoldTime()
+        {
+            int delay;
+            if (int.TryParse(KeyHoldTime_TextBox.Text, out delay))
+            {
+                return delay;
+            }
+            else
+            {
+                DebugPrintLine("ERROR: invalid delay value, using default:100");
+                return 100; // default
+            }
         }
     }
 }
