@@ -12,12 +12,30 @@ namespace ControllerKeystroke
 {
     public partial class Form1 : Form
     {
+        /// <summary>
+        /// Finds a window by its class name and window name.
+        /// </summary>
+        /// <param name="lpClassName">The class name of the window.</param>
+        /// <param name="lpWindowName">The name of the window.</param>
+        /// <returns>A handle to the window.</returns>
         [DllImport("USER32.DLL", CharSet = CharSet.Unicode)]
         public static extern IntPtr FindWindow(string lpClassName, string lpWindowName);
 
+        /// <summary>
+        /// Brings the specified window to the foreground.
+        /// </summary>
+        /// <param name="hWnd">A handle to the window.</param>
+        /// <returns>True if the window was brought to the foreground; otherwise, false.</returns>
         [DllImport("USER32.DLL")]
         public static extern bool SetForegroundWindow(IntPtr hWnd);
 
+        /// <summary>
+        /// Synthesizes a keystroke.
+        /// </summary>
+        /// <param name="bVk">The virtual-key code of the key.</param>
+        /// <param name="bScan">The hardware scan code of the key.</param>
+        /// <param name="dwFlags">Controls various aspects of function operation.</param>
+        /// <param name="dwExtraInfo">An additional value associated with the keystroke.</param>
         [DllImport("user32.dll", SetLastError = true)]
         private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
@@ -27,6 +45,9 @@ namespace ControllerKeystroke
         Controller MyController;
         InputSimulator inputSimulator;
 
+        /// <summary>
+        /// Represents the direction of the gear shift.
+        /// </summary>
         public enum GearDirection
         {
             Up,
@@ -42,15 +63,22 @@ namespace ControllerKeystroke
             { "6", VirtualKeyCode.VK_6 }
         };
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="Form1"/> class.
+        /// </summary>
         public Form1()
         {
             InitializeComponent();
             InitXInputs();
             GearPosition = 1; // start in 1st gear
             Thread loopThread = new Thread(PollJoystickXinput);
-            loopThread.Start();// start the PollJoystickXinput thread
+            loopThread.Start(); // start the PollJoystickXinput thread
         }
 
+        /// <summary>
+        /// Sends a keystroke to the active window.
+        /// </summary>
+        /// <param name="key">The key to send.</param>
         public void SendKeystroke(string key) // e.g. I K O L 
         {
             String AppName = AppName_textBox.Text;
@@ -69,13 +97,13 @@ namespace ControllerKeystroke
             {
                 DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + key + "'");
 
-                //works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                // works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                 inputSimulator = new InputSimulator();
                 inputSimulator.Keyboard.KeyDown(keyCode);
 
-                //byte newkey = (byte)key[0];
-                //keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
-                //keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
+                // byte newkey = (byte)key[0];
+                // keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
+                // keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
             }
             else
             {
@@ -83,6 +111,9 @@ namespace ControllerKeystroke
             }
         }
 
+        /// <summary>
+        /// Polls the joystick for input using XInput.
+        /// </summary>
         public void PollJoystickXinput()
         {
             if (MyController != null)
@@ -111,9 +142,13 @@ namespace ControllerKeystroke
             }
         }
 
+        /// <summary>
+        /// Handles the gamepad data input.
+        /// </summary>
+        /// <param name="MyControllerState">The state of the controller.</param>
         void HandleGamepadDataIn(SharpDX.XInput.State MyControllerState)
         {
-            //DebugPrintLine($"PacketNumber : {MyControllerState.PacketNumber.ToString()}");
+            // DebugPrintLine($"PacketNumber : {MyControllerState.PacketNumber.ToString()}");
             if (checkBox1.Checked)
             {
                 DebugPrintLine(MyControllerState.Gamepad.ToString());
@@ -129,6 +164,9 @@ namespace ControllerKeystroke
             }
         }
 
+        /// <summary>
+        /// Initializes the XInput controllers.
+        /// </summary>
         void InitXInputs()
         {
             DebugPrintLine("Start XGamepadApp");
@@ -163,6 +201,10 @@ namespace ControllerKeystroke
             DebugPrintLine("Poll events from controller..");
         }
 
+        /// <summary>
+        /// Sets the gear position based on the direction.
+        /// </summary>
+        /// <param name="direction">The direction to shift the gear.</param>
         public void SetGear(GearDirection direction)
         {
             if (direction == GearDirection.Up)
@@ -202,16 +244,31 @@ namespace ControllerKeystroke
 
             SendKeystroke(key);
         }
+
+        /// <summary>
+        /// Clears the content of the rich text box.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event arguments.</param>
         private void ClearButton_Click(object sender, EventArgs e)
         {
             richTextBox1.Clear();
         }
 
+        /// <summary>
+        /// Finds the application window.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event arguments.</param>
         private void FindApp_button_Click(object sender, EventArgs e)
         {
             FindApp();
         }
 
+        /// <summary>
+        /// Finds the application window by its name.
+        /// </summary>
+        /// <returns>True if the application window was found; otherwise, false.</returns>
         public bool FindApp()
         {
             bool found = false;
@@ -236,6 +293,10 @@ namespace ControllerKeystroke
             return found;
         }
 
+        /// <summary>
+        /// Prints debug text to the rich text box.
+        /// </summary>
+        /// <param name="text">The text to print.</param>
         public void DebugPrint(string text)
         {
             if (richTextBox1.InvokeRequired)
@@ -250,21 +311,40 @@ namespace ControllerKeystroke
             }
         }
 
+        /// <summary>
+        /// Prints debug text with a newline to the rich text box.
+        /// </summary>
+        /// <param name="text">The text to print.</param>
         public void DebugPrintLine(string text)
         {
             DebugPrint(text + "\n");
         }
 
+        /// <summary>
+        /// Handles the click event for the coin button.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event arguments.</param>
         private void Coin_button_click(object sender, MouseEventArgs e)
         {
             SendKeystroke("6");
         }
 
+        /// <summary>
+        /// Handles the click event for the gear up button.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event arguments.</param>
         private void GearUp_button_click(object sender, MouseEventArgs e)
         {
             SetGear(GearDirection.Up);
         }
 
+        /// <summary>
+        /// Handles the click event for the gear down button.
+        /// </summary>
+        /// <param name="sender">The sender of the event.</param>
+        /// <param name="e">The event arguments.</param>
         private void GearDown_button_Click(object sender, MouseEventArgs e)
         {
             SetGear(GearDirection.Down);
