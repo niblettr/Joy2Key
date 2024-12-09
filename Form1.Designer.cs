@@ -38,14 +38,16 @@
             GearUp_button = new Button();
             Coin_button = new Button();
             button3 = new Button();
+            KeyHoldTime_TextBox = new TextBox();
+            label2 = new Label();
             SuspendLayout();
             // 
             // richTextBox1
             // 
             richTextBox1.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            richTextBox1.Location = new Point(3, 219);
+            richTextBox1.Location = new Point(3, 194);
             richTextBox1.Name = "richTextBox1";
-            richTextBox1.Size = new Size(1224, 256);
+            richTextBox1.Size = new Size(473, 186);
             richTextBox1.TabIndex = 0;
             richTextBox1.Text = "";
             // 
@@ -68,7 +70,7 @@
             // 
             // button1
             // 
-            button1.Location = new Point(3, 181);
+            button1.Location = new Point(104, 156);
             button1.Name = "button1";
             button1.Size = new Size(88, 32);
             button1.TabIndex = 3;
@@ -91,7 +93,7 @@
             checkBox1.AutoSize = true;
             checkBox1.Checked = true;
             checkBox1.CheckState = CheckState.Checked;
-            checkBox1.Location = new Point(12, 46);
+            checkBox1.Location = new Point(198, 169);
             checkBox1.Name = "checkBox1";
             checkBox1.Size = new Size(108, 19);
             checkBox1.TabIndex = 5;
@@ -100,7 +102,7 @@
             // 
             // GearDown_button
             // 
-            GearDown_button.Location = new Point(146, 84);
+            GearDown_button.Location = new Point(134, 67);
             GearDown_button.Name = "GearDown_button";
             GearDown_button.Size = new Size(88, 32);
             GearDown_button.TabIndex = 6;
@@ -110,7 +112,7 @@
             // 
             // GearUp_button
             // 
-            GearUp_button.Location = new Point(240, 84);
+            GearUp_button.Location = new Point(228, 67);
             GearUp_button.Name = "GearUp_button";
             GearUp_button.Size = new Size(88, 32);
             GearUp_button.TabIndex = 7;
@@ -120,7 +122,7 @@
             // 
             // Coin_button
             // 
-            Coin_button.Location = new Point(194, 122);
+            Coin_button.Location = new Point(182, 105);
             Coin_button.Name = "Coin_button";
             Coin_button.Size = new Size(88, 32);
             Coin_button.TabIndex = 8;
@@ -138,11 +140,30 @@
             button3.UseVisualStyleBackColor = true;
             button3.MouseClick += Switch_Button_Click;
             // 
+            // KeyHoldTime_TextBox
+            // 
+            KeyHoldTime_TextBox.Location = new Point(390, 162);
+            KeyHoldTime_TextBox.Name = "KeyHoldTime_TextBox";
+            KeyHoldTime_TextBox.Size = new Size(80, 23);
+            KeyHoldTime_TextBox.TabIndex = 10;
+            KeyHoldTime_TextBox.Text = "100";
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(390, 144);
+            label2.Name = "label2";
+            label2.Size = new Size(100, 15);
+            label2.TabIndex = 11;
+            label2.Text = "Key hold time mS";
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
-            ClientSize = new Size(1266, 477);
+            ClientSize = new Size(507, 382);
+            Controls.Add(label2);
+            Controls.Add(KeyHoldTime_TextBox);
             Controls.Add(button3);
             Controls.Add(Coin_button);
             Controls.Add(GearUp_button);
@@ -171,5 +192,7 @@
         private Button GearUp_button;
         private Button Coin_button;
         private Button button3;
+        private TextBox KeyHoldTime_TextBox;
+        private Label label2;
     }
 }

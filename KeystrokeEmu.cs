@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using WindowsInput.Native;
 using WindowsInput;
 using static System.Runtime.CompilerServices.RuntimeHelpers;
+using SharpDX.XInput;
 
 namespace Joy2Key
 {
@@ -102,7 +103,7 @@ namespace Joy2Key
             public const uint INPUT_KEYBOARD = 1;
 
             // Simulate Key Press (Key Down and Key Up)
-            public static void SendKeyPress(ushort key)
+            public static void SendKeyPress(ushort key, Form1 formInstance)
             {
                 INPUT[] inputDown = new INPUT[1];
                 inputDown[0].type = INPUT_KEYBOARD;
@@ -118,12 +119,30 @@ namespace Joy2Key
                 SendInput(1, inputDown, Marshal.SizeOf(typeof(INPUT)));
 
                 // Optionally, wait for a moment to simulate a longer key press
-                Thread.Sleep(150);  // Adjust the sleep time as needed
+                int delay = formInstance.GetKeyHoldTime();
+
+                Thread.Sleep(delay);  // Adjust the sleep time as needed
 
                 // Send the key release (release)
                 SendInput(1, inputUp, Marshal.SizeOf(typeof(INPUT)));
             }
         }
+
+        public int GetKeyHoldTime()
+        {
+            int delay;
+            if (int.TryParse(KeyHoldTime_TextBox.Text, out delay))
+            {
+                return delay;
+            }
+            else
+            {
+                DebugPrintLine("ERROR: invalid delay value, using default:100");
+                return 100; // default
+            }            
+        }
+
+        
 
         /// <summary>
         /// Sends a keystroke to the active window.
@@ -143,17 +162,10 @@ namespace Joy2Key
 
                 // the troublesome section.....
                 // why are ascci charaters being sent? Should they not be keyboard scan code?
-#if true
-                // works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                SendKey_inputSimulatorMethod(keyCode);
-#else
 
-                
-                SendKeybdEvent(0x36); // does not work either...
-
-                // works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                //KeySimulator.SendKeyPress(KeySimulator.VK_6);
-#endif
+                //SendKey_inputSimulatorMethod(keyCode); // does not work
+                //SendKey_kbdEventMethod(0x36); // does not work either...
+                SendKey_SendInputMethod();
             }
             else
             {
@@ -162,11 +174,11 @@ namespace Joy2Key
         }
 
         //experimental
-        public static void SendKey_kbdEventMethod(byte key)
+        public void SendKey_kbdEventMethod(byte key)
         {
             // Simulate key down
             keybd_event(key, 0, KEYEVENTF_KEYDOWN, 0);
-            Thread.Sleep(150);
+            Thread.Sleep(GetKeyHoldTime());    // niblett fix
             // Simulate key up
             keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
         }
@@ -175,8 +187,14 @@ namespace Joy2Key
         {
             inputSimulator = new InputSimulator();
             inputSimulator.Keyboard.KeyDown(keyCode);
-            Thread.Sleep(150);
+            int delay = Convert.ToInt32(KeyHoldTime_TextBox.Text);
+            Thread.Sleep(GetKeyHoldTime());
             inputSimulator.Keyboard.KeyUp(keyCode);
+        }
+
+        public void SendKey_SendInputMethod()
+        {
+            KeySimulator.SendKeyPress(KeySimulator.VK_6, this); // just send a 6 for now (coin insert)
         }
     }
 }
