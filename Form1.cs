@@ -143,13 +143,13 @@ namespace ControllerKeystroke
                 inputUp[0].inputUnion.ki.wVk = key;
                 inputUp[0].inputUnion.ki.dwFlags = KEYEVENTF_KEYUP;
 
-                // Send the key press (Key Down)
+                // Send the key press (push Down)
                 SendInput(1, inputDown, Marshal.SizeOf(typeof(INPUT)));
 
                 // Optionally, wait for a moment to simulate a longer key press
-                Thread.Sleep(100);  // Adjust the sleep time as needed
+                Thread.Sleep(150);  // Adjust the sleep time as needed
 
-                // Send the key release (Key Up)
+                // Send the key release (release)
                 SendInput(1, inputUp, Marshal.SizeOf(typeof(INPUT)));
             }
         }
