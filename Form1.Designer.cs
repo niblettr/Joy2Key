@@ -1,4 +1,4 @@
-﻿namespace ControllerKeystroke
+﻿namespace Joy2Key
 {
     partial class Form1
     {

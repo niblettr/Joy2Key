@@ -1,4 +1,4 @@
-namespace ControllerKeystroke
+namespace Joy2Key
 {
     internal static class Program
     {
