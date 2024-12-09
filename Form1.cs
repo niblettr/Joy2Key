@@ -78,8 +78,8 @@ namespace ControllerKeystroke
         /// <summary>
         /// Sends a keystroke to the active window.
         /// </summary>
-        /// <param name="key">The key to send.</param>
-        public void SendKeystroke(string key) // e.g. I K O L 
+        /// <param name="KeyStroke">The key to send.</param>
+        public void SendKeystroke(string KeyStroke) // e.g. I K O L 
         {
             String AppName = AppName_textBox.Text;
             IntPtr p = FindWindow(null, AppName);
@@ -93,9 +93,11 @@ namespace ControllerKeystroke
                 DebugPrintLine("ERROR: \"" + AppName + "\" NOT found/running");
             }
 
-            if (GearToKeyCodeMap.TryGetValue(key, out VirtualKeyCode keyCode))
+            if (GearToKeyCodeMap.TryGetValue(KeyStroke, out VirtualKeyCode keyCode))
             {
-                DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + key + "'");
+                //Keys keyData = (Keys)keyCode;
+
+                kDebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + KeyStroke + "'");
 
                 // the troublesome section.....
                 // why are ascci charaters being sent? Should they not be keyboard scan code?
@@ -105,7 +107,7 @@ namespace ControllerKeystroke
                 inputSimulator.Keyboard.KeyDown(keyCode);
 #else
                 // works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                byte newkey = (byte)key[0];
+                byte newkey = (byte)KeyStroke[0];
                 keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
                 keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
 #endif
