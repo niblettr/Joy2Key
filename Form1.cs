@@ -97,13 +97,18 @@ namespace ControllerKeystroke
             {
                 DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + key + "'");
 
+                // the troublesome section.....
+                // why are ascci charaters being sent? Should they not be keyboard scan code?
+#if false
                 // works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                 inputSimulator = new InputSimulator();
                 inputSimulator.Keyboard.KeyDown(keyCode);
-
-                // byte newkey = (byte)key[0];
-                // keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
-                // keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
+#else
+                // works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+                byte newkey = (byte)key[0];
+                keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
+                keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
+#endif
             }
             else
             {
