@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using WindowsInput.Native;
+using WindowsInput;
 
 namespace Joy2Key
 {
@@ -20,7 +21,9 @@ namespace Joy2Key
         [DllImport("user32.dll", SetLastError = true)]
         private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
-        private const int KEYEVENTF_KEYUP = 0x0002;
+        // Constants for keypress
+        public const uint KEYEVENTF_KEYDOWN = 0x0000;
+        public const uint KEYEVENTF_KEYUP = 0x0002;
 
         /// <summary>
         /// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -94,10 +97,6 @@ namespace Joy2Key
                 public UIntPtr dwExtraInfo;
             }
 
-            // Constants for keypress
-            public const uint KEYEVENTF_KEYDOWN = 0x0000;
-            public const uint KEYEVENTF_KEYUP = 0x0002;
-
             // Virtual keycodes
             public const uint INPUT_KEYBOARD = 1;
 
@@ -143,18 +142,17 @@ namespace Joy2Key
 
                 // the troublesome section.....
                 // why are ascci charaters being sent? Should they not be keyboard scan code?
-#if false
+#if true
                 // works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                 inputSimulator = new InputSimulator();
                 inputSimulator.Keyboard.KeyDown(keyCode);
 #else
-                // works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                //byte newkey = (byte)KeyStroke[0];
-                //keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
-                //keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
+
+                
+                SendKeybdEvent(0x36); // does not work either...
 
                 // works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                KeySimulator.SendKeyPress(KeySimulator.VK_6);
+                //KeySimulator.SendKeyPress(KeySimulator.VK_6);
 #endif
             }
             else
@@ -162,5 +160,16 @@ namespace Joy2Key
                 DebugPrintLine("VirtualKeyCode not, complete the table you lazy git");
             }
         }
+
+        //experimental
+        public static void SendKeybdEvent(byte key)
+        {
+            // Simulate key down
+            keybd_event(key, 0, KEYEVENTF_KEYDOWN, 0);
+            Thread.Sleep(150);
+            // Simulate key up
+            keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
+        }
+
     }
 }
