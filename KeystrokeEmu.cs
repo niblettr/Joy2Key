@@ -6,6 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 using WindowsInput.Native;
 using WindowsInput;
+using static System.Runtime.CompilerServices.RuntimeHelpers;
 
 namespace Joy2Key
 {
@@ -44,7 +45,7 @@ namespace Joy2Key
 
             public const int VK_SPACE = 0x20;
             public const int VK_ENTER = 0x0D;
-            public const int VK_6     = 0x36;  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+            public const int VK_6 = 0x36;  //<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
 
             // Import the SendInput function from user32.dll
             [DllImport("user32.dll", SetLastError = true)]
@@ -144,8 +145,7 @@ namespace Joy2Key
                 // why are ascci charaters being sent? Should they not be keyboard scan code?
 #if true
                 // works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-                inputSimulator = new InputSimulator();
-                inputSimulator.Keyboard.KeyDown(keyCode);
+                SendKey_inputSimulatorMethod(keyCode);
 #else
 
                 
@@ -162,7 +162,7 @@ namespace Joy2Key
         }
 
         //experimental
-        public static void SendKeybdEvent(byte key)
+        public static void SendKey_kbdEventMethod(byte key)
         {
             // Simulate key down
             keybd_event(key, 0, KEYEVENTF_KEYDOWN, 0);
@@ -171,5 +171,12 @@ namespace Joy2Key
             keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
         }
 
+        public void SendKey_inputSimulatorMethod(VirtualKeyCode keyCode)
+        {
+            inputSimulator = new InputSimulator();
+            inputSimulator.Keyboard.KeyDown(keyCode);
+            Thread.Sleep(150);
+            inputSimulator.Keyboard.KeyUp(keyCode);
+        }
     }
 }
