@@ -58,7 +58,7 @@ namespace Joy2Key
                     break;
             }
 
-            SendKeystroke(key);
+            HandleVirtualKeystroke(key);
         }
     }
 }

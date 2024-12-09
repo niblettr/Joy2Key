@@ -129,19 +129,11 @@ namespace Joy2Key
         /// Sends a keystroke to the active window.
         /// </summary>
         /// <param name="KeyStroke">The key to send.</param>
-        public void SendKeystroke(string KeyStroke) // e.g. I K O L 
+        public void HandleVirtualKeystroke(string KeyStroke) // e.g. I K O L 
         {
             String AppName = AppName_textBox.Text;
-            IntPtr p = FindWindow(null, AppName);
 
-            if (p != null && SetForegroundWindow(p))
-            {
-                DebugPrintLine("\"" + AppName + "\" found/running");
-            }
-            else
-            {
-                DebugPrintLine("ERROR: \"" + AppName + "\" NOT found/running");
-            }
+            FindRunningApp(AppName, WindowSearchOptions.BringWindowToFront); // may not find app but send key press below anyway....
 
             if (GearToKeyCodeMap.TryGetValue(KeyStroke, out VirtualKeyCode keyCode))
             {
@@ -161,6 +153,7 @@ namespace Joy2Key
                 //keybd_event(newkey, 0, 0,               UIntPtr.Zero); // Key down
                 //keybd_event(newkey, 0, KEYEVENTF_KEYUP, UIntPtr.Zero); // Key up
 
+                // works for calculator but not Model2 emulator <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
                 KeySimulator.SendKeyPress(KeySimulator.VK_6);
 #endif
             }

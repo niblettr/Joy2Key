@@ -25,7 +25,7 @@ namespace Joy2Key
         /// <param name="e">The event arguments.</param>
         private void FindApp_button_Click(object sender, EventArgs e)
         {
-            FindApp();
+            FindRunningApp(AppName_textBox.Text, WindowSearchOptions.BringWindowToFront);
         }
 
         /// <summary>
@@ -35,7 +35,7 @@ namespace Joy2Key
         /// <param name="e">The event arguments.</param>
         private void Coin_button_click(object sender, MouseEventArgs e)
         {
-            SendKeystroke("6");
+            HandleVirtualKeystroke("6");
         }
 
         /// <summary>

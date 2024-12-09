@@ -9,42 +9,31 @@ namespace Joy2Key
     public partial class Form1 : Form
     {
 
-        /// <summary>
-        /// Finds the application window by its name.
-        /// </summary>
-        /// <returns>True if the application window was found; otherwise, false.</returns>
-        public bool FindApp()
+        public enum WindowSearchOptions
         {
-            bool found = false;
-            String AppName = AppName_textBox.Text;
-#if false
-            Process p = Process.GetProcessesByName(AppName).FirstOrDefault(); // Sega Rally Championship (Rev B) // Model 2 Emulator  // Calculator
-
-            if (p != null)
-#else
-            IntPtr p = FindWindow(null, AppName); // Sega Rally Championship (Rev B) // Model 2 Emulator  // Calculator
-
-            if (SetForegroundWindow(p)) // working: calculator Model 2 Emulator 
-#endif
-            {
-                found = true;
-                DebugPrintLine(AppName + " found");
-            }
-            else
-            {
-                DebugPrintLine("ERROR: " + AppName + " not found");
-            }
-            return found;
+            none,
+            BringWindowToFront
         }
 
-        // AI version
-        public static void BringWindowToFront(string windowTitle)
+        public bool FindRunningApp(string windowTitle, WindowSearchOptions FocusOption) // SetGear(GearDirection.Up);
         {
+            bool found = false;
+
             IntPtr hWnd = FindWindow(null, windowTitle); // Use the window title of the Model 2 emulator
             if (hWnd != IntPtr.Zero)
             {
-                SetForegroundWindow(hWnd);
+                found = true;
+                DebugPrintLine(windowTitle + " found");
+                if (FocusOption == WindowSearchOptions.BringWindowToFront)
+                {
+                    SetForegroundWindow(hWnd);
+                }
             }
+            else
+            {
+                DebugPrintLine("ERROR: " + windowTitle + " not found");
+            }
+            return found;
         }
     }
 }
