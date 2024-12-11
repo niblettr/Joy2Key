@@ -1,13 +1,6 @@
 using System.Runtime.InteropServices;
-using System.Diagnostics;
 using SharpDX.XInput;
-using static System.Windows.Forms.AxHost;
-using WindowsInput.Native;
 using WindowsInput;
-using System.Windows.Forms;
-using System.Reflection;
-using System.Security.Cryptography;
-using System.Threading;
 
 namespace Joy2Key
 {

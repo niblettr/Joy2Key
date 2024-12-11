@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Runtime.InteropServices;
 using WindowsInput.Native;
 using WindowsInput;
-using static System.Runtime.CompilerServices.RuntimeHelpers;
-using SharpDX.XInput;
+
 
 namespace Joy2Key
 {
