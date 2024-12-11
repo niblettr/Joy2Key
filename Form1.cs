@@ -28,6 +28,8 @@ namespace JoyKey
         int GearPosition;
         Controller MyController;
 
+        private NotifyIcon trayIcon;
+
         //InputSimulator inputSimulator; // niblett
 
         /// <summary>
@@ -36,10 +38,33 @@ namespace JoyKey
         public Form1()
         {
             InitializeComponent();
+
+            // Initialize the tray icon
+            trayIcon = new NotifyIcon();
+            trayIcon.Text = "JoyKey";
+            trayIcon.Icon = new System.Drawing.Icon("./pad.ico"); // Set your icon path here
+            trayIcon.Visible = false;
+            trayIcon.DoubleClick += TrayIcon_DoubleClick;
+
             InitXInputs();
             GearPosition = 1; // start in 1st gear
             Thread loopThread = new Thread(PollJoystickXinput);
             loopThread.Start(); // start the PollJoystickXinput thread
+        }
+
+        private void Minimise_Button_Click(object sender, MouseEventArgs e)
+        {
+            // Minimize window to system tray
+            this.Hide();
+            trayIcon.Visible = true;
+        }
+
+        private void TrayIcon_DoubleClick(object sender, EventArgs e)
+        {
+            // Restore the window when the tray icon is double-clicked
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            trayIcon.Visible = false;
         }
 
         public int GetKeyHoldTime()

@@ -6,10 +6,12 @@ namespace JoyKey
     public partial class Form1 : Form
     {
 
-        private void Minimise_Button_Click(object sender, MouseEventArgs e)
-        {
-
-        }
+        //private void Minimise_Button_Click(object sender, MouseEventArgs e)
+        //{
+        //     // minimise window to system tray
+        //    this.WindowState = FormWindowState.Minimized;
+            
+        //}
         /// <summary>
         /// Clears the content of the rich text box.
         /// </summary>
