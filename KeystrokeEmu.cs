@@ -40,7 +40,7 @@ namespace Joy2Key
             { "6", VirtualKeyCode.VK_6 }
         };
 
-        public class KeySimulator
+        public class SendInput_KeySimulator
         {
             // Key constants (you can add more as needed)
 
@@ -147,9 +147,9 @@ namespace Joy2Key
                 // the troublesome section.....
                 // why are ascci charaters being sent? Should they not be keyboard scan code?
 
-                //SendKey_inputSimulatorMethod(keyCode); // does not work
+                SendKey_InputSimulator(keyCode); // does not work
                 //SendKey_kbdEventMethod(0x36); // does not work either...
-                SendKey_SendInputMethod();
+                //SendKey_SendInputMethod(); // SendMethod implementation (doesn't work on directx either)
             }
             else
             {
@@ -167,7 +167,7 @@ namespace Joy2Key
             keybd_event(key, 0, KEYEVENTF_KEYUP, 0);
         }
 
-        public void SendKey_inputSimulatorMethod(VirtualKeyCode keyCode)
+        public void SendKey_InputSimulator(VirtualKeyCode keyCode)
         {
             inputSimulator = new InputSimulator();
             inputSimulator.Keyboard.KeyDown(keyCode);
@@ -178,7 +178,7 @@ namespace Joy2Key
 
         public void SendKey_SendInputMethod()
         {
-            KeySimulator.SendKeyPress(KeySimulator.VK_6, this); // just send a 6 for now (coin insert)
+            SendInput_KeySimulator.SendKeyPress(SendInput_KeySimulator.VK_6, this); // just send a 6 for now (coin insert)
         }
     }
 }
