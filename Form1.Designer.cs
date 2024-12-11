@@ -54,9 +54,9 @@
             // 
             // Coin_button
             // 
-            this.Coin_button.Location = new System.Drawing.Point(84, 148);
+            this.Coin_button.Location = new System.Drawing.Point(15, 115);
             this.Coin_button.Name = "Coin_button";
-            this.Coin_button.Size = new System.Drawing.Size(144, 58);
+            this.Coin_button.Size = new System.Drawing.Size(194, 48);
             this.Coin_button.TabIndex = 1;
             this.Coin_button.Text = "Insert Coin (6)";
             this.Coin_button.UseVisualStyleBackColor = true;
@@ -74,7 +74,8 @@
             // 
             // ClearButton
             // 
-            this.ClearButton.Location = new System.Drawing.Point(4, 231);
+            this.ClearButton.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.ClearButton.Location = new System.Drawing.Point(15, 169);
             this.ClearButton.Name = "ClearButton";
             this.ClearButton.Size = new System.Drawing.Size(125, 30);
             this.ClearButton.TabIndex = 3;
@@ -84,9 +85,9 @@
             // 
             // GearUp_button
             // 
-            this.GearUp_button.Location = new System.Drawing.Point(163, 84);
+            this.GearUp_button.Location = new System.Drawing.Point(115, 84);
             this.GearUp_button.Name = "GearUp_button";
-            this.GearUp_button.Size = new System.Drawing.Size(144, 58);
+            this.GearUp_button.Size = new System.Drawing.Size(94, 25);
             this.GearUp_button.TabIndex = 4;
             this.GearUp_button.Text = "Shift Up";
             this.GearUp_button.UseVisualStyleBackColor = true;
@@ -96,7 +97,7 @@
             // 
             this.GearDown_button.Location = new System.Drawing.Point(13, 84);
             this.GearDown_button.Name = "GearDown_button";
-            this.GearDown_button.Size = new System.Drawing.Size(144, 58);
+            this.GearDown_button.Size = new System.Drawing.Size(96, 25);
             this.GearDown_button.TabIndex = 5;
             this.GearDown_button.Text = "Shift Down";
             this.GearDown_button.UseVisualStyleBackColor = true;
@@ -112,7 +113,8 @@
             // 
             // KeyHoldTime_TextBox
             // 
-            this.KeyHoldTime_TextBox.Location = new System.Drawing.Point(228, 239);
+            this.KeyHoldTime_TextBox.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.KeyHoldTime_TextBox.Location = new System.Drawing.Point(328, 179);
             this.KeyHoldTime_TextBox.Name = "KeyHoldTime_TextBox";
             this.KeyHoldTime_TextBox.Size = new System.Drawing.Size(82, 20);
             this.KeyHoldTime_TextBox.TabIndex = 7;
@@ -120,16 +122,18 @@
             // 
             // richTextBox1
             // 
-            this.richTextBox1.Location = new System.Drawing.Point(3, 267);
+            this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
+            this.richTextBox1.Location = new System.Drawing.Point(3, 205);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(421, 333);
+            this.richTextBox1.Size = new System.Drawing.Size(407, 75);
             this.richTextBox1.TabIndex = 8;
             this.richTextBox1.Text = "";
             // 
             // checkBox1
             // 
+            this.checkBox1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.checkBox1.AutoSize = true;
-            this.checkBox1.Location = new System.Drawing.Point(135, 239);
+            this.checkBox1.Location = new System.Drawing.Point(146, 177);
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(86, 17);
             this.checkBox1.TabIndex = 9;
@@ -138,8 +142,9 @@
             // 
             // label1
             // 
+            this.label1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(225, 223);
+            this.label1.Location = new System.Drawing.Point(325, 163);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(88, 13);
             this.label1.TabIndex = 10;
@@ -158,7 +163,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(433, 606);
+            this.ClientSize = new System.Drawing.Size(433, 285);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.checkBox1);
