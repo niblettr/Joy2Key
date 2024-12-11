@@ -6,12 +6,22 @@ namespace JoyKey
     public partial class Form1 : Form
     {
 
-        //private void Minimise_Button_Click(object sender, MouseEventArgs e)
-        //{
-        //     // minimise window to system tray
-        //    this.WindowState = FormWindowState.Minimized;
-            
-        //}
+        private void Minimise_Button_Click(object sender, MouseEventArgs e)
+        {
+            // Minimize window to system tray
+            this.Hide();
+            trayIcon.Visible = true;
+        }
+
+        private void TrayIcon_DoubleClick(object sender, EventArgs e)
+        {
+            // Restore the window when the tray icon is double-clicked
+            this.Show();
+            this.WindowState = FormWindowState.Normal;
+            trayIcon.Visible = false;
+        }
+
+
         /// <summary>
         /// Clears the content of the rich text box.
         /// </summary>
