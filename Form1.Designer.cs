@@ -42,6 +42,7 @@
             this.label2 = new System.Windows.Forms.Label();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
+            this.button1 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -194,11 +195,22 @@
             this.label3.TabIndex = 13;
             this.label3.Text = "mS";
             // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(315, 126);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(56, 71);
+            this.button1.TabIndex = 13;
+            this.button1.Text = "Minimise to system tray";
+            this.button1.UseVisualStyleBackColor = true;
+            this.button1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Minimise_Button_Click);
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(386, 285);
+            this.Controls.Add(this.button1);
             this.Controls.Add(this.FindButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label2);
@@ -232,6 +244,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.Button button1;
     }
 }
 

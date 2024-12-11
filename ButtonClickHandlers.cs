@@ -5,6 +5,11 @@ namespace JoyKey
 {
     public partial class Form1 : Form
     {
+
+        private void Minimise_Button_Click(object sender, MouseEventArgs e)
+        {
+
+        }
         /// <summary>
         /// Clears the content of the rich text box.
         /// </summary>
