@@ -130,9 +130,9 @@
             // 
             this.richTextBox1.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.richTextBox1.Location = new System.Drawing.Point(15, 205);
+            this.richTextBox1.Location = new System.Drawing.Point(12, 204);
             this.richTextBox1.Name = "richTextBox1";
-            this.richTextBox1.Size = new System.Drawing.Size(324, 75);
+            this.richTextBox1.Size = new System.Drawing.Size(359, 75);
             this.richTextBox1.TabIndex = 8;
             this.richTextBox1.Text = "";
             // 
@@ -198,7 +198,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(351, 285);
+            this.ClientSize = new System.Drawing.Size(386, 285);
             this.Controls.Add(this.FindButton);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.label2);

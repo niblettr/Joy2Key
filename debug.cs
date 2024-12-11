@@ -33,6 +33,8 @@ namespace JoyKey
         /// <param name="text">The text to print.</param>
         public void DebugPrintLine(string text)
         {
+            //prepend text with a timestamp
+            text = DateTime.Now.ToString("[HH:mm:ss.fff]") + " " + text;
             DebugPrint(text + "\n");
         }
     }
