@@ -61,7 +61,7 @@ namespace JoyKey
             }
             else
             {
-                DebugPrintLine("ERROR: invalid delay value, using default:100");
+                DebugPrintLine("ERROR: invalid delay value, will now use default:100");
                 return 100; // default
             }
         }

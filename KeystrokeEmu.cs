@@ -20,13 +20,11 @@ namespace JoyKey
         [DllImport("user32.dll", SetLastError = true)]
         private static extern void keybd_event(byte bVk, byte bScan, uint dwFlags, UIntPtr dwExtraInfo);
 
+        InputSimulator inputSimulator;
+
         // Constants for keypress
         public const uint KEYEVENTF_KEYDOWN = 0x0000;
         public const uint KEYEVENTF_KEYUP = 0x0002;
-
-        /// <summary>
-        /// ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// </summary>
 
         private static readonly Dictionary<string, VirtualKeyCode> GearToKeyCodeMap = new Dictionary<string, VirtualKeyCode>
         {
@@ -49,16 +47,8 @@ namespace JoyKey
 
             if (GearToKeyCodeMap.TryGetValue(KeyStroke, out VirtualKeyCode keyCode))
             {
-                //Keys keyData = (Keys)keyCode;
-
                 DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + KeyStroke + "'");
-
-                // the troublesome section.....
-                // why are ascci charaters being sent? Should they not be keyboard scan code?
-
                 SendKey_InputSimulator(keyCode); // does not work
-                //SendKey_kbdEventMethod(0x36); // does not work either...
-                //SendKey_SendInputMethod(); // SendMethod implementation (doesn't work on directx either)
             }
             else
             {
@@ -66,28 +56,13 @@ namespace JoyKey
             }
         }
 
-        //experimental
-        public void SendKey_kbdEventMethod(byte key)
-        {
-            // Simulate key down
-           // keybd_event(key, 0, KEYEVENTF_KEYDOWN, 0); // niblett
-            Thread.Sleep(GetKeyHoldTime());
-            // Simulate key up
-           // keybd_event(key, 0, KEYEVENTF_KEYUP, 0); // niblett
-        }
-
         public void SendKey_InputSimulator(VirtualKeyCode keyCode)
         {
-            //inputSimulator = new InputSimulator();
-            //inputSimulator.Keyboard.KeyDown(keyCode);
-            //int delay = Convert.ToInt32(KeyHoldTime_TextBox.Text);
-            //Thread.Sleep(GetKeyHoldTime());
-            //inputSimulator.Keyboard.KeyUp(keyCode);
-        }
-
-        public void SendKey_SendInputMethod()
-        {
-          //  SendInput_KeySimulator.SendKeyPress(SendInput_KeySimulator.VK_6, this); // just send a 6 for now (coin insert) // niblett
+            inputSimulator = new InputSimulator();
+            inputSimulator.Keyboard.KeyDown(keyCode);
+            int delay = Convert.ToInt32(KeyHoldTime_TextBox.Text);
+            Thread.Sleep(GetKeyHoldTime());
+            inputSimulator.Keyboard.KeyUp(keyCode);
         }
     }
 }
