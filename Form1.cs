@@ -27,10 +27,7 @@ namespace JoyKey
 
         int GearPosition;
         Controller MyController;
-
         private NotifyIcon trayIcon;
-
-        //InputSimulator inputSimulator; // niblett
 
         /// <summary>
         /// Initializes a new instance of the <see cref="Form1"/> class.
@@ -39,17 +36,21 @@ namespace JoyKey
         {
             InitializeComponent();
 
-            // Initialize the tray icon
+            InitTrayIcon();
+            InitXInputs();
+            GearPosition = 1; // start in 1st gear
+
+            Thread loopThread = new Thread(PollJoystickXinput);
+            loopThread.Start(); // start the PollJoystickXinput thread
+        }
+
+        public void InitTrayIcon()
+        {
             trayIcon = new NotifyIcon();
             trayIcon.Text = "JoyKey";
             trayIcon.Icon = new System.Drawing.Icon("./pad.ico"); // Set your icon path here
             trayIcon.Visible = false;
             trayIcon.DoubleClick += TrayIcon_DoubleClick;
-
-            InitXInputs();
-            GearPosition = 1; // start in 1st gear
-            Thread loopThread = new Thread(PollJoystickXinput);
-            loopThread.Start(); // start the PollJoystickXinput thread
         }
 
         public int GetKeyHoldTime()
