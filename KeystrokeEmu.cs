@@ -131,8 +131,15 @@ namespace JoyKey
         public void HandleVirtualKeystroke(string KeyStroke) // e.g. I K O L 
         {
             String AppName = AppName_textBox.Text;
-
-            FindRunningApp(AppName, WindowSearchOptions.BringWindowToFront); // may not find app but send key press below anyway....
+            bool BringToFront = BringToFront_CheckBox.Checked;
+            if (BringToFront)
+            {
+                FindRunningApp(AppName, WindowSearchOptions.BringWindowToFront); // may not find app but send key press below anyway....
+            }
+            else
+            {
+                FindRunningApp(AppName, WindowSearchOptions.none); // may not find app but send key press below anyway....
+            }
 
             if (GearToKeyCodeMap.TryGetValue(KeyStroke, out VirtualKeyCode keyCode))
             {

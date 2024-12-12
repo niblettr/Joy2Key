@@ -16,11 +16,11 @@ namespace JoyKey
             BringWindowToFront
         }
 
-        public bool FindRunningApp(string windowTitle, WindowSearchOptions FocusOption) // SetGear(GearDirection.Up);
+        public bool FindRunningApp(string windowTitle, WindowSearchOptions FocusOption)
         {
             bool found = false;
 
-            IntPtr hWnd = FindWindow(null, windowTitle); // Use the window title of the Model 2 emulator
+            IntPtr hWnd = FindWindow(null, windowTitle);
             if (hWnd != IntPtr.Zero)
             {
                 found = true;

@@ -43,6 +43,7 @@
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.label3 = new System.Windows.Forms.Label();
             this.button1 = new System.Windows.Forms.Button();
+            this.BringToFront_CheckBox = new System.Windows.Forms.CheckBox();
             this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -170,6 +171,7 @@
             // groupBox1
             // 
             this.groupBox1.BackColor = System.Drawing.SystemColors.Menu;
+            this.groupBox1.Controls.Add(this.BringToFront_CheckBox);
             this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.GearDown_button);
             this.groupBox1.Controls.Add(this.GearUp_button);
@@ -178,7 +180,7 @@
             this.groupBox1.Controls.Add(this.KeyHoldTime_TextBox);
             this.groupBox1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.groupBox1.ForeColor = System.Drawing.SystemColors.WindowText;
-            this.groupBox1.Location = new System.Drawing.Point(15, 59);
+            this.groupBox1.Location = new System.Drawing.Point(15, 72);
             this.groupBox1.Name = "groupBox1";
             this.groupBox1.Size = new System.Drawing.Size(269, 101);
             this.groupBox1.TabIndex = 12;
@@ -204,6 +206,18 @@
             this.button1.Text = "Minimise to system tray";
             this.button1.UseVisualStyleBackColor = true;
             this.button1.MouseClick += new System.Windows.Forms.MouseEventHandler(this.Minimise_Button_Click);
+            // 
+            // BringToFront_CheckBox
+            // 
+            this.BringToFront_CheckBox.AutoSize = true;
+            this.BringToFront_CheckBox.Checked = true;
+            this.BringToFront_CheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
+            this.BringToFront_CheckBox.Location = new System.Drawing.Point(174, 19);
+            this.BringToFront_CheckBox.Name = "BringToFront_CheckBox";
+            this.BringToFront_CheckBox.Size = new System.Drawing.Size(89, 17);
+            this.BringToFront_CheckBox.TabIndex = 14;
+            this.BringToFront_CheckBox.Text = "Bring to Front";
+            this.BringToFront_CheckBox.UseVisualStyleBackColor = true;
             // 
             // Form1
             // 
@@ -245,6 +259,7 @@
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.CheckBox BringToFront_CheckBox;
     }
 }
 
