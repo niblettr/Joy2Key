@@ -54,7 +54,7 @@ namespace JoyKey
                     break;
             }
 
-           // HandleVirtualKeystroke(key); // niblett
+            HandleVirtualKeystroke(key); // niblett
         }
     }
 }
