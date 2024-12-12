@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Diagnostics;
 
 namespace JoyKey
 {
@@ -19,6 +17,8 @@ namespace JoyKey
         public bool FindRunningApp(string windowTitle, WindowSearchOptions FocusOption)
         {
             bool found = false;
+
+            Process p = Process.GetProcessesByName(windowTitle).FirstOrDefault();
 
             IntPtr hWnd = FindWindow(null, windowTitle);
             if (hWnd != IntPtr.Zero)
