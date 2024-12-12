@@ -2,3 +2,6 @@
 bin/
 obj/
 .vs/
+/packages/InputSimulator.1.0.4.0
+/packages/SharpDX.4.2.0
+/packages/SharpDX.XInput.4.2.0
