@@ -21,12 +21,13 @@ namespace JoyKey
             Process p = Process.GetProcessesByName(windowTitle).FirstOrDefault();
 
             IntPtr hWnd = FindWindow(null, windowTitle);
-            if (hWnd != IntPtr.Zero)
+            if (hWnd != IntPtr.Zero || p != null)
             {
                 found = true;
                 DebugPrintLine(windowTitle + " found");
                 if (FocusOption == WindowSearchOptions.BringWindowToFront)
                 {
+                    // niblett, fix >> Process p = ......
                     SetForegroundWindow(hWnd);
                 }
             }
