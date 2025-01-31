@@ -3,6 +3,7 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Windows.Forms;
 using SharpDX.XInput;
+using WindowsInput.Native;
 
 namespace JoyKey
 {
@@ -42,6 +43,35 @@ namespace JoyKey
 
             Thread loopThread = new Thread(PollJoystickXinput);
             loopThread.Start(); // start the PollJoystickXinput thread
+        }
+
+        /// <summary>
+        /// Sends a keystroke to the active window.
+        /// </summary>
+        /// <param name="KeyStroke">The key to send.</param>
+        public void HandleVirtualKeystroke(string KeyStroke) // e.g. I K O L 
+        {
+            String AppName = AppName_textBox.Text;
+            bool BringToFront = BringToFront_CheckBox.Checked;
+            if (BringToFront)
+            {
+                FindRunningApp(AppName, WindowSearchOptions.BringWindowToFront); // may not find app but send key press below anyway....
+            }
+            else
+            {
+                FindRunningApp(AppName, WindowSearchOptions.none); // may not find app but send key press below anyway....
+            }
+
+            //
+            //if (GearToKeyCodeMap.TryGetValue(KeyStroke, out VirtualKeyCode keyCode))
+            {
+                DebugPrintLine(">>>>>>>>>>>>>>>> Send keystroke: '" + KeyStroke + "'");
+                SendKey_InputSimulator(0); // does not work
+            }
+            //else
+            //{
+            //    DebugPrintLine("VirtualKeyCode not, complete the table you lazy git");
+            //}
         }
 
         public void InitTrayIcon()
